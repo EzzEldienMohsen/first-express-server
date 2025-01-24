@@ -3,6 +3,7 @@ const pool = require('../db');
 const getAllTasks = async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM task');
+    console.log(result);
     res.status(200).json({ tasks: result.rows });
   } catch (err) {
     console.error('Database query failed', err);
@@ -13,7 +14,6 @@ const getTask = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await pool.query('SELECT * FROM task WHERE id = $1', [id]);
-    console.log(result);
     res.status(200).json(result.rows);
   } catch (err) {
     console.error('Database query failed', err);
@@ -28,7 +28,6 @@ const updateTask = async (req, res) => {
       'UPDATE task SET name = $1, completed =$2 WHERE id = $3 RETURNING *',
       [name, completed, id]
     );
-    console.log(result);
     res.status(201).json(result.rows);
   } catch (err) {
     console.error('Database query failed', err);
@@ -43,7 +42,6 @@ const deleteTask = async (req, res) => {
       'DELETE FROM task WHERE id = $1 RETURNING *',
       [id]
     );
-    console.log(result);
     res.status(204).json(result.rows);
   } catch (err) {
     console.error('Database query failed', err);
