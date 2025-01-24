@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const tasks = require('./api/v1/tasks');
+const notFound = require('./middleware/not-found');
 
 app.use(express.json());
 
@@ -13,6 +14,8 @@ app.get('/hello', (req, res) => {
   res.status(200).send('Task Manager App');
 });
 app.use('/api/v1/tasks', tasks);
+
+app.use(notFound);
 app.listen(port, () => {
   console.log(`server is up and running on port ${port}`);
 });

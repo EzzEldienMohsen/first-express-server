@@ -14,7 +14,7 @@ const getTask = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await pool.query('SELECT * FROM task WHERE id = $1', [id]);
-    res.status(200).json(result.rows);
+    res.status(200).json({ task: result.rows });
   } catch (err) {
     console.error('Database query failed', err);
     res.status(500).json({ error: 'Failed to fetch tasks' });
@@ -28,7 +28,7 @@ const updateTask = async (req, res) => {
       'UPDATE task SET name = $1, completed =$2 WHERE id = $3 RETURNING *',
       [name, completed, id]
     );
-    res.status(201).json(result.rows);
+    res.status(201).json({ task: result.rows });
   } catch (err) {
     console.error('Database query failed', err);
     res.status(500).json({ error: 'Failed to fetch tasks' });
@@ -42,7 +42,7 @@ const deleteTask = async (req, res) => {
       'DELETE FROM task WHERE id = $1 RETURNING *',
       [id]
     );
-    res.status(204).json(result.rows);
+    res.status(204).json({ task: result.rows });
   } catch (err) {
     console.error('Database query failed', err);
     res.status(500).json({ error: 'Failed to fetch tasks' });
@@ -55,7 +55,7 @@ const addTask = async (req, res) => {
       'INSERT INTO task (name, completed) VALUES ($1, $2) RETURNING *',
       [name, completed]
     );
-    res.status(201).json(result.rows[0]); // Return single task object
+    res.status(201).json({ task: result.rows[0] }); // Return single task object
   } catch (err) {
     console.error('Database query failed', err);
     res.status(500).json({ error: 'Failed to add task' });
