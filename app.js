@@ -5,6 +5,7 @@ const app = express();
 const port = 3000;
 const tasks = require('./api/v1/tasks');
 const notFound = require('./middleware/not-found');
+const errorHandlerMiddleware = require('./middleware/error-handler');
 
 app.use(express.json());
 
@@ -16,6 +17,7 @@ app.get('/hello', (req, res) => {
 app.use('/api/v1/tasks', tasks);
 
 app.use(notFound);
+app.use(errorHandlerMiddleware);
 app.listen(port, () => {
   console.log(`server is up and running on port ${port}`);
 });
