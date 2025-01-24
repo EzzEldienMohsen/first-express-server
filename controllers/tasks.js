@@ -3,8 +3,7 @@ const pool = require('../db');
 const getAllTasks = async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM task');
-    console.log(result);
-    res.status(200).json(result.rows);
+    res.status(200).json({ tasks: result.rows });
   } catch (err) {
     console.error('Database query failed', err);
     res.status(500).json({ error: 'Failed to fetch tasks' });
@@ -52,17 +51,16 @@ const deleteTask = async (req, res) => {
   }
 };
 const addTask = async (req, res) => {
-  const { name, completed } = req.body;
+  const { name, completed = false } = req.body; // Default false
   try {
     const result = await pool.query(
-      'INSERT INTO task (name, completed) VALUES ($1,$2) RETURNING *',
+      'INSERT INTO task (name, completed) VALUES ($1, $2) RETURNING *',
       [name, completed]
     );
-    console.log(result);
-    res.status(201).json(result.rows);
+    res.status(201).json(result.rows[0]); // Return single task object
   } catch (err) {
     console.error('Database query failed', err);
-    res.status(500).json({ error: 'Failed to fetch tasks' });
+    res.status(500).json({ error: 'Failed to add task' });
   }
 };
 
